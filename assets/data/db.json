@@ -1,0 +1,38 @@
+{
+  "recipes": [
+    {
+      "id": 1,
+      "title": "Khinkali",
+      "description": "A traditional Georgian dish.",
+      "thumbnail": "assets/images/khinkali.jpg",
+      "ingredients": [
+        "meat",
+        "chili pepper",
+        "salt"
+      ],
+      "cookingInstructions": "Cook each batch for 8 minutes."
+    },
+    {
+      "id": 2,
+      "title": "Khachapuri",
+      "description": "A traditional Georgian dish.",
+      "thumbnail": "assets/images/khachapuri.jpg",
+      "ingredients": [
+        "Cheese",
+        "Egg"
+      ],
+      "cookingInstructions": "Combine the three kinds of cheese and fill each bread boat"
+    },
+    {
+      "id": 3,
+      "title": "Pkhali",
+      "description": "A traditional Georgian dish.",
+      "thumbnail": "assets/images/mxali.jpg",
+      "ingredients": [
+        " vegetables",
+        "garlic"
+      ],
+      "cookingInstructions": "Make the Pkhali Mixture"
+    }
+  ]
+}
