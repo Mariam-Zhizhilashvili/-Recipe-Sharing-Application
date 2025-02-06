@@ -1,0 +1,27 @@
+<form *ngIf="recipeForm" [formGroup]="recipeForm" (ngSubmit)="onUpdate()">
+  <label>Title:</label>
+  <input type="text" formControlName="title" required />
+
+  <label>Description:</label>
+  <textarea formControlName="description" required></textarea>
+
+  <label>Thumbnail URL:</label>
+  <input type="text" formControlName="thumbnail" required />
+
+  <label>Ingredients:</label>
+  <div formArrayName="ingredients">
+    <div *ngFor="let ingredient of ingredients.controls; let i = index">
+      <input [formControlName]="i" placeholder="Ingredient" />
+      <button type="button" (click)="removeIngredient(i)">Remove</button>
+    </div>
+  </div>
+  
+  <button type="button" (click)="addIngredient()">Add Ingredient</button>
+
+  <label>Cooking Instructions:</label>
+  <textarea formControlName="cookingInstructions" required></textarea>
+
+  <button type="submit" [disabled]="!recipeForm.valid">Update Recipe</button>
+  <button type="button" [routerLink]="'/'">Cancel</button>
+</form>
+

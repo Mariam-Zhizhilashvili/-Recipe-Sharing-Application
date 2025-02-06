@@ -1,0 +1,27 @@
+<div class="search-container">
+  <input type="text" [(ngModel)]="searchQuery" placeholder="Search recipes..." class="search-bar" />
+</div>
+
+
+<div class="recipe-list">
+  <div *ngFor="let recipe of filteredRecipes()" class="recipe-card">
+    <div class="recipe-header">
+      <h2>{{ recipe.title }}</h2>
+      <img [src]="recipe.thumbnail" alt="Recipe Thumbnail" class="recipe-thumbnail" />
+    </div>
+    <div class="recipe-body">
+      <p class="recipe-description">{{ recipe.description }}</p>
+      <p><strong>Ingredients:</strong> {{ recipe.ingredients.join(', ') }}</p>
+      <p><strong>Cooking Instructions:</strong> {{ recipe.cookingInstructions }}</p>
+    </div>
+    <div class="recipe-actions">
+      <button (click)="onDelete(recipe.id)" class="delete-btn">Delete</button>
+      <button *ngIf="isEditable(recipe.id)" [routerLink]="['/recipes', recipe.id, 'edit']">
+        Edit
+      </button>
+      
+      <button [routerLink]="['/recipes', recipe.id]">View Full Recipe</button> 
+    </div>
+    
+  </div>
+</div>
