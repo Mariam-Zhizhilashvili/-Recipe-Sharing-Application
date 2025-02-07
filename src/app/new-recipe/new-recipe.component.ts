@@ -9,8 +9,8 @@ import { Recipe } from '../recipe.model';
   styleUrls: ['./new-recipe.component.css']
 })
 export class NewRecipeComponent implements OnInit {
-  recipeForm!: FormGroup;  // Initialize form group
-  recipes: Recipe[] = []; // Define recipes array to store fetched recipes
+  recipeForm!: FormGroup; 
+  recipes: Recipe[] = []; 
 
   constructor(
     private fb: FormBuilder, 
@@ -57,7 +57,6 @@ export class NewRecipeComponent implements OnInit {
       const newRecipe = this.recipeForm.value;
     
       this.recipeService.addRecipe(newRecipe).subscribe((savedRecipe) => {
-        // console.log('New Recipe Added:', savedRecipe); 
         this.router.navigate(['/']); 
       });
     }

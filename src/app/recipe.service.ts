@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Recipe } from './recipe.model';
 import { tap } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class RecipeService {
 
 
   private fetchRecipes(): void {
-    this.http.get<Recipe[]>(this.apiUrl).subscribe((recipes) => {
+    this.http.get<Recipe[]>(this.apiUrl).pipe(take(1)).subscribe((recipes) => {
       this.recipesSource.next(recipes);
     });
   }
@@ -30,7 +31,6 @@ export class RecipeService {
   addRecipe(newRecipe: Recipe): Observable<Recipe> {
     return this.http.post<Recipe>(this.apiUrl, newRecipe).pipe(
       tap((savedRecipe) => {
-        // console.log('New Recipe Added:', savedRecipe);
         this.recipesSource.next([...this.recipesSource.getValue(), savedRecipe]); 
       })
     );
@@ -48,7 +48,6 @@ export class RecipeService {
   editRecipe(id: string | number, updatedRecipe: Recipe): Observable<Recipe> {
     return this.http.put<Recipe>(`${this.apiUrl}/${id.toString()}`, updatedRecipe).pipe(
       tap((savedRecipe) => {
-        // console.log('Updated Recipe:', savedRecipe);
         const updatedRecipes = this.recipesSource.getValue().map(recipe =>
           recipe.id === id ? savedRecipe : recipe
         );

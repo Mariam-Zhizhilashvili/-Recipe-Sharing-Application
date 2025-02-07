@@ -24,15 +24,10 @@ export class RecipeUpdateFormComponent implements OnInit {
     const recipeIdParam = this.route.snapshot.paramMap.get('id');
   
     if (!recipeIdParam) {
-      // console.error('No Recipe ID found in URL');
-      // alert('Invalid Recipe ID');
       return;
     }
   
-    // Ensures that recipeId is always a string
     this.recipeId = recipeIdParam.toString(); 
-  
-    // console.log('Editing Recipe ID:', this.recipeId);
   
     this.recipeForm = this.fb.group({
       title: ['', Validators.required],
@@ -43,17 +38,12 @@ export class RecipeUpdateFormComponent implements OnInit {
     });
   
     this.recipeService.getRecipes().subscribe((recipes) => {
-      // console.log("All Recipes:", recipes.map(r => r.id)); 
-      // console.log("Looking for Recipe ID:", this.recipeId);
     
       const recipe = recipes.find(r => r.id.toString() === this.recipeId.toString());
     
       if (!recipe) {
-        // console.warn('⚠️ Recipe ID not found:', this.recipeId);
         return; 
       }
-    
-      // console.log('✅ Found Recipe:', recipe);
     
       this.recipeForm.patchValue({
         title: recipe.title,
@@ -70,7 +60,6 @@ export class RecipeUpdateFormComponent implements OnInit {
           ingredientsArray.push(new FormControl(ingredient, Validators.required));
         });
       } else {
-        // console.error('Error: ingredients is not an array', recipe.ingredients);
       }
     });
     
@@ -98,21 +87,14 @@ export class RecipeUpdateFormComponent implements OnInit {
           : this.recipeForm.value.ingredients.split(',').map((ing: string) => ing.trim()),
       };
   
-      // console.log("Updating Recipe:", updatedRecipe);
-  
       this.recipeService.editRecipe(this.recipeId, updatedRecipe).subscribe(
         () => {
-          // console.log("Recipe updated successfully!");
-          // alert('Recipe updated successfully!');
           this.router.navigate(['/']); 
         },
         (error) => {
-          // console.error("Error updating recipe:", error);
-          // alert("Failed to update recipe. Check console for details.");
         }
       );
     } else {
-      // alert('Please fill all fields correctly');
     }
   }
   
