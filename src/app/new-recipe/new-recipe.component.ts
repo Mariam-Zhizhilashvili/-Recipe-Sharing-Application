@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipe.model'; 
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 @Component({
   selector: 'app-new-recipe',
   templateUrl: './new-recipe.component.html',
   styleUrls: ['./new-recipe.component.css']
 })
-export class NewRecipeComponent implements OnInit {
+export class NewRecipeComponent implements OnInit, OnDestroy {
   recipeForm!: FormGroup; 
-  recipes: Recipe[] = []; 
+  recipes: Recipe[] = [];
+  private destroy$ = new Subject<void>(); 
 
   constructor(
     private fb: FormBuilder, 
@@ -23,7 +27,6 @@ export class NewRecipeComponent implements OnInit {
     this.loadRecipes(); 
   }
 
-  // Initialize form with necessary controls
   initializeForm(): void {
     this.recipeForm = this.fb.group({
       title: ['', Validators.required],
@@ -35,9 +38,11 @@ export class NewRecipeComponent implements OnInit {
   }
 
   loadRecipes(): void {
-    this.recipeService.getRecipes().subscribe((recipes) => {
-      this.recipes = recipes;
-    });
+    this.recipeService.getRecipes()
+      .pipe(takeUntil(this.destroy$))  
+      .subscribe((recipes) => {
+        this.recipes = recipes;
+      });
   }
 
   get ingredients() {
@@ -56,10 +61,17 @@ export class NewRecipeComponent implements OnInit {
     if (this.recipeForm.valid) {
       const newRecipe = this.recipeForm.value;
     
-      this.recipeService.addRecipe(newRecipe).subscribe((savedRecipe) => {
-        this.router.navigate(['/']); 
-      });
+      this.recipeService.addRecipe(newRecipe)
+        .pipe(takeUntil(this.destroy$))  
+        .subscribe((savedRecipe) => {
+          this.router.navigate(['/']); 
+        });
     }
   }
-  
+
+  ngOnDestroy(): void {
+    this.destroy$.next();  
+    this.destroy$.complete();  
+  }
 }
+

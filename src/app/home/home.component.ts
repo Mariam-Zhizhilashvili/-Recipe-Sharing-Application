@@ -1,23 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipe.model';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   recipes: Recipe[] = [];
   searchQuery: string = '';
+  private destroy$ = new Subject<void>(); 
 
   constructor(private recipeService: RecipeService) {}
 
   ngOnInit(): void {
     this.loadRecipes();
-    this.recipeService.recipes$.subscribe((recipes) => {
-      this.recipes = recipes;
-    });
+
+    this.recipeService.recipes$
+      .pipe(takeUntil(this.destroy$)) 
+      .subscribe((recipes) => {
+        this.recipes = recipes;
+      });
   }
 
   loadRecipes(): void {
@@ -43,4 +49,8 @@ export class HomeComponent implements OnInit {
     return typeof recipeId === 'string' && /^[a-zA-Z0-9]{2,}$/.test(recipeId);
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next(); 
+    this.destroy$.complete();  
+  }
 }
